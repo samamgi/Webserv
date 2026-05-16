@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Gallery | The Good Webserv</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/index.html" class="nav-brand">WebServ</a>
+            <ul>
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/about.html">About</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">CGI Tests</a>
+                    <div class="dropdown-content">
+                        <a href="/upload.html">Upload</a>
+                        <a href="/zodiac.html">Zodiac</a>
+                        <a href="/cgi-bin/simple_post.py">POST</a>
+                        <a href="/pet_gallery.html">Pet Gallery</a>
+                        <a href="/cgi-bin/loop.py">Loop</a>
+                        <a href="/cgi-bin/error.py">Error</a>
+                        <a href="/cookie_test.html">Cookie Test</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="card">
+            <h1>Pet Gallery</h1>
+            <div class="team-gallery" id="gallery">
+                <p>Loading...</p>
+            </div>
+
+            <h1>Upload a New Pet</h1>
+            <form action="/cgi-bin/pet_gallery.py" method="post" enctype="multipart/form-data" class="contact-form" id="pet-upload-form">
+                <input type="text" id="pet_name" name="pet_name" placeholder="Pet's Name" required>
+                <input type="file" id="pet_picture" name="pet_picture" accept="image/*" required>
+                <button type="submit" class="btn">Upload Pet</button>
+                <div class="error-content" id="upload-error"></div>
+            </form>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2026 42 / WEBSERV</p>
+    </footer>
+    <script>
+        function setGallery(html) {
+            var gallery = document.getElementById('gallery');
+            gallery.innerHTML = html;
+            gallery.querySelectorAll('.delete-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var id = encodeURIComponent(btn.getAttribute('data-id'));
+                    fetch('/cgi-bin/pet_gallery.py?action=delete&id=' + id)
+                        .then(function(r) { return r.text(); })
+                        .then(setGallery);
+                });
+            });
+        }
+
+        document.getElementById('pet-upload-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var form = e.target;
+            var errorDiv = document.getElementById('upload-error');
+            errorDiv.textContent = '';
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', form.action, true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    form.reset();
+                    setGallery(xhr.responseText);
+                } else {
+                    errorDiv.textContent = 'Upload failed: ' + (xhr.status === 413 ? 'File too large.' : 'Server error ' + xhr.status + '.');
+                }
+            };
+            xhr.onerror = function() {
+                errorDiv.textContent = 'An error occurred during the upload.';
+            };
+            xhr.send(new FormData(form));
+        });
+
+        fetch('/cgi-bin/pet_gallery.py')
+            .then(function(r) { return r.text(); })
+            .then(setGallery);
+    </script>
+</body>
+</html>

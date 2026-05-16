@@ -1,0 +1,56 @@
+// ╔═════════════════════════════╗
+// ║ Requests to test via telnet ║
+// ╚═════════════════════════════╝
+
+> telnet [ip] [port]
+
+GET / HTTP/1.1
+Host: localhost
+
+------
+
+POST /post HTTP/1.1
+Host: localhost
+Connection: close
+Content-type: application/json
+Content-length: 14
+
+{"test":true}
+
+-------
+
+POST /upload HTTP/1.1
+Host: localhost:8080
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 27
+
+name=Johnny&email=johnny@test.com
+
+curl -X POST -F "file=@cat.png" http://localhost:9090/uploads/       
+
+
+curl -X POST -H "Content-Type: application/json" -d '{"test":"data"}' http://localhost:8080/uploads/
+
+http://localhost:8080/cgi-bin/add.py?a=5&b=10
+
+http://localhost:8080/cgi-bin/mult.php?a=5&b=1
+
+
+--------------------------------------
+
+curl -X POST -F "file3=@cat.jpg" http://localhost:9090/uploads/
+
+curl -X POST -F "file3=@cat.png" http://localhost:9090/uploads/
+
+curl -X POST -F "description=kitty" -F "file1=@cat.jpg" -F "file2=@cat.jpg" http://localhost:9090/uploads/
+
+curl -X POST -F "description=kitty" -F "file1=@cat.png" -F "file2=@cat2.png" http://localhost:9090/uploads/
+
+printf "POST /uploads/ HTTP/1.1\r\nHost: localhost\r\nCookie: a; b;c\r\nContent-Type: multipart/form-data; boundary=--1234\r\nContent-Length: 62\r\n\r\n----1234\r\nContent-Disposition: form-data; name=description\r\n\r\na photo of my pets still the same \r\n first body\r\n----1234\r\nContent-Disposition: form/data; name=description\r\nOther-Header:Random\r\n\r\nsecond body I am the second\r\n----1234--\r\n" | nc 127.0.0.1 9090
+
+curl -X POST -F "description=a photo of my pets" -F "description=file 1" -F "description=file 2" http://localhost:9090/uploads/
+
+printf "DELETE /uploads/text.txt HTTP/1.1\r\nHost: 127.0.0.1 \r\nUser-Agent: curl/7.68.0\r\n\r\n" | nc 127.0.0.1 8080
+
+
+

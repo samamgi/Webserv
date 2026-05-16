@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zodiac Calculator | The Good Webserv</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/index.html" class="nav-brand">WebServ</a>
+            <ul>
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/about.html">About</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">CGI Tests</a>
+                    <div class="dropdown-content">
+                        <a href="/upload.html">Upload</a>
+                        <a href="/zodiac.html">Zodiac</a>
+                        <a href="/cgi-bin/simple_post.py">POST</a>
+                        <a href="/pet_gallery.html">Pet Gallery</a>
+                        <a href="/cgi-bin/loop.py">Loop</a>
+                        <a href="/cgi-bin/error.py">Error</a>
+                        <a href="/cookie_test.html">Cookie Test</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="card">
+            <h1>Zodiac Sign Calculator</h1>
+            <form action="/cgi-bin/zodiac.php" method="post" class="contact-form">
+                <input type="text" id="first_name" name="first_name" placeholder="First Name" required>
+                <input type="text" id="last_name" name="last_name" placeholder="Last Name" required>
+                <input type="text" id="dob" name="dob" placeholder="DD/MM/YYYY" pattern="\d{2}/\d{2}/\d{4}" required>
+                <button type="submit" class="btn">Calculate and Add</button>
+            </form>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2026 42 / WEBSERV</p>
+    </footer>
+</body>
+</html>

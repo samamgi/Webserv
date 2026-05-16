@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Test | The Good Webserv</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/index.html" class="nav-brand">WebServ</a>
+            <ul>
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/about.html">About</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">CGI Tests</a>
+                    <div class="dropdown-content">
+                        <a href="/upload.html">Upload</a>
+                        <a href="/zodiac.html">Zodiac</a>
+                        <a href="/cgi-bin/simple_post.py">POST</a>
+                        <a href="/pet_gallery.html">Pet Gallery</a>
+                        <a href="/cgi-bin/loop.py">Loop</a>
+                        <a href="/cgi-bin/error.py">Error</a>
+                        <a href="/cookie_test.html">Cookie Test</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="card">
+            <h1>Cookie Session Test</h1>
+            <div class="contact-form">
+                <input type="text" id="username" value="testuser" placeholder="Username">
+                <button id="loginBtn" class="btn">Login</button>
+                <button id="checkBtn" class="btn">Check Status</button>
+                <button id="logoutBtn" class="btn">Logout</button>
+            </div>
+            <div id="status" style="margin-top: 20px; padding: 15px; background: rgba(255, 255, 255, 0.8); border-radius: 8px;">
+                Server response will appear here.
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2026 42 / WEBSERV</p>
+    </footer>
+
+    <script>
+        const usernameInput = document.getElementById('username');
+        const statusDiv = document.getElementById('status');
+
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            const user = usernameInput.value;
+            statusDiv.textContent = 'Attempting to log in...';
+
+            fetch('/cgi-bin/login.py?username=' + user)
+                .then(response => response.text())
+                .then(data => {
+                    statusDiv.innerHTML = "<b>Server says:</b> " + data + "<p>A cookie should now be set in your browser!</p>";
+                })
+                .catch(err => {
+                    statusDiv.textContent = 'Error: ' + err;
+                });
+        });
+
+        document.getElementById('checkBtn').addEventListener('click', () => {
+            statusDiv.textContent = 'Checking login status...';
+            
+            fetch('/cgi-bin/profile.py')
+                .then(response => response.text())
+                .then(data => {
+                    statusDiv.innerHTML = "<b>Server says:</b> " + data;
+                })
+                .catch(err => {
+                    statusDiv.textContent = 'Error: ' + err;
+                });
+        });
+        
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            statusDiv.textContent = 'Logging out...';
+
+            fetch('/cgi-bin/logout.py')
+                .then(response => response.text())
+                .then(data => {
+                    statusDiv.innerHTML = "<b>Server says:</b> " + data + "<p>The cookie should now be deleted.</p>";
+                })
+                .catch(err => {
+                    statusDiv.textContent = 'Error: ' + err;
+                });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload | The Good Webserv</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/index.html" class="nav-brand">WebServ</a>
+            <ul>
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="/about.html">About</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn">CGI Tests</a>
+                    <div class="dropdown-content">
+                        <a href="/upload.html">Upload</a>
+                        <a href="/zodiac.html">Zodiac</a>
+                        <a href="/cgi-bin/simple_post.py">POST</a>
+                        <a href="/pet_gallery.html">Pet Gallery</a>
+                        <a href="/cgi-bin/loop.py">Loop</a>
+                        <a href="/cgi-bin/error.py">Error</a>
+                        <a href="/cookie_test.html">Cookie Test</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <script>
+        document.addEventListener("submit", function(e) {
+
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+
+            xhr = new XMLHttpRequest();
+            xhr.open("POST", "/cgi-bin/upload.py", true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    document.querySelector("#form").style.display = "none";
+                    document.querySelector("#form2").style.display = "block";
+                    document.querySelector(".success-content").textContent = "File uploaded successfully! \n" + xhr.responseText;
+
+                    // window.location.href = "/cgi-bin/upload.py";
+                    // alert("File uploaded successfully!");
+                } else {
+                    // alert("Error uploading file: " + xhr.statusText);
+                    document.querySelector(".error-content").textContent = "An error occurred during the upload.";
+                }
+            };
+            xhr.onerror = function() {
+                // alert("Network error occurred during the upload.");
+                document.querySelector(".error-content").textContent = "An error occurred during the upload.";
+            };
+            xhr.send(formData);
+        });
+    </script>
+    <main>
+        <div class="card">
+            <h1>Upload a File</h1>
+            <form action="/cgi-bin/upload.py" method="post" enctype="multipart/form-data" class="contact-form" id="form">
+                <input class="file" type="file" name="filename" id="file" required>
+                <button type="submit" class="btn" class="btn" id="btn-submit">Upload File</button>
+                <div class="error-content"></div>
+            </form>
+            <div class="contact-form" id="form2" style="display: none">
+                <div class="success-content"></div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2026 42 / WEBSERV</p>
+    </footer>
+</body>
+</html>
